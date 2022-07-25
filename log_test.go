@@ -1,8 +1,9 @@
 package flog_test
 
 import (
-	"flog"
 	"testing"
+
+	"github.com/xinight/flog"
 )
 
 func TestLog(t *testing.T) {
