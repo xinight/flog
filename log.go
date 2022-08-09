@@ -63,7 +63,7 @@ var files = map[logLv]*os.File{
 	L_PANIC:  nil,
 }
 
-type fLogger struct {
+type FLogger struct {
 	// log root path
 	rootPath string
 	// goroutine number
@@ -81,17 +81,17 @@ type fLogger struct {
 	wg *sync.WaitGroup
 }
 
-var Logger *fLogger
+var Logger *FLogger
 
 // new logger
-func NewLogger(path string, flag int, chanSize int) *fLogger {
+func NewLogger(path string, flag int, chanSize int) *FLogger {
 	if path[len(path)-1] != '/' {
 		path = path + "/"
 	}
 	if chanSize <= 0 {
 		chanSize = DEFAULTSIZE
 	}
-	Logger = &fLogger{
+	Logger = &FLogger{
 		rootPath: path,
 		num:      1,
 		max:      1,
@@ -105,7 +105,7 @@ func NewLogger(path string, flag int, chanSize int) *fLogger {
 }
 
 // start goroutine to write log
-func (l *fLogger) Start() {
+func (l *FLogger) Start() {
 	l.start = true
 	l.wg.Add(l.num)
 	ch = make(chan *logC, l.size)
@@ -128,7 +128,7 @@ func (l *fLogger) Start() {
 }
 
 // send log struct to channel
-func (l *fLogger) WriteLog(lv logLv, formatMsg string, other ...interface{}) error {
+func (l *FLogger) WriteLog(lv logLv, formatMsg string, other ...interface{}) error {
 	if !l.start {
 		return errors.New("logger do not start")
 	}
@@ -176,7 +176,7 @@ func getFile(lv logLv, path string) *os.File {
 }
 
 // close logger
-func (l *fLogger) Close() {
+func (l *FLogger) Close() {
 	close(ch)
 	l.wg.Wait()
 	l.start = false
